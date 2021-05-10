@@ -19,7 +19,7 @@ import java.util.List;
  * Controller class for web-api
  */
 public class NetflixController {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NetflixShow.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetflixController.class);
     @Autowired
     NetflixService netflixService;
 
