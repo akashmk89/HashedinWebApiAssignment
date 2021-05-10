@@ -1,5 +1,7 @@
 package com.hashedin.demo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,14 +11,29 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.logging.LogManager;
+
 @EnableAutoConfiguration
-@SpringBootApplication ()
-@ComponentScan(basePackages = {"com.hashedin.controller", "com.hashedin.service", "com.hashedin.repository","com.hashedin.utils"})
+@SpringBootApplication
+/***
+ * scans all the packages for classes and beans
+ */
+@ComponentScan(basePackages = {
+		"com.hashedin.controller",
+		"com.hashedin.service",
+		"com.hashedin.repository",
+		"com.hashedin.utils",
+		"com.hashedin.model"})
 @EntityScan("com.hashedin.model")
 @EnableJpaRepositories("com.hashedin.repository")
-@EnableSwagger2
+@EnableSwagger2 // used swagger throughout development as it helps
 @EnableScheduling
 public class DemoApplication {
+	private static final Logger LOGGER = LoggerFactory.getLogger(DemoApplication.class);
+	/***
+	 * Application entry point
+	 * @param args application arguments
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(DemoApplication.class, args);
 	}

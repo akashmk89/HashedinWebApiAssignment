@@ -1,21 +1,26 @@
 package com.hashedin.model;
-
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+/***
+ * Lombok is used to automatically manage getter and setter
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table(name = "netflix_shows")
+/***
+ * A class the maps to the equivalent table in the database
+ */
 public class NetflixShow {
+
     @Id
     @Column(name = "show_id", nullable = false, unique = true)
-    private String show_id;
+    private String showId;
 
     private String type;
 
@@ -33,10 +38,10 @@ public class NetflixShow {
     private String country;
 
     @Column(name = "date_added")
-    private Date date_added;
+    private Date dateAdded;
 
     @Column(name = "release_year")
-    private int release_year;
+    private int releaseYear;
 
     private String rating;
 
@@ -44,7 +49,7 @@ public class NetflixShow {
 
     @Lob
     @Column(name = "listed_in", length = 3000)
-    private String listed_in;
+    private String listedIn;
 
     @Lob
     @Column(name = "description", length = 10000)

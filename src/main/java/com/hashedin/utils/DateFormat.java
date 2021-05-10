@@ -9,6 +9,9 @@ import java.util.Locale;
 
 public class DateFormat {
     @Bean
+    /***
+     * converts String to the Date format
+     */
     public Date getDate(String token) throws ParseException {
         Date date = new Date();
         java.text.DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);

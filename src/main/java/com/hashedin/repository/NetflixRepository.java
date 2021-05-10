@@ -6,10 +6,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Repository
 public interface NetflixRepository extends CrudRepository<NetflixShow, String> {
+    /***
+     * Native query that fetches only those many records as per query
+     * @param type show Type
+     * @param count number of record to be fetched
+     * @return
+     */
 
     @Query(value = "SELECT * FROM netflix_shows shows WHERE shows.type = :type ORDER BY show_id ASC LIMIT :count", nativeQuery = true)
     public Collection<NetflixShow> getNetflixShowsByCount( @Param("type") String type, @Param("count") int count);

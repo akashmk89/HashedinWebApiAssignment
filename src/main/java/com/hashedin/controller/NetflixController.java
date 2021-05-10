@@ -2,26 +2,37 @@ package com.hashedin.controller;
 
 import com.hashedin.model.NetflixShow;
 import com.hashedin.service.NetflixService;
-import com.hashedin.utils.CsvReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/netflix")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://127.0.0.1")
+/***
+ * Controller class for web-api
+ */
 public class NetflixController {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NetflixShow.class);
     @Autowired
     NetflixService netflixService;
 
-    // Returns one of the four queries based on the input
+    /***
+     * If the combination of Input does not meet and query criteria then throws a exception
+     * one end point that handles multiple requests based on the user input and gives the time taken to execute the query
+     * @param count fetches n TV Show records mentioned by count
+     * @param movieType fetches all TV Show mentioned by movieType
+     * @param country fetches all TV Show mentioned by country
+     * @param startDate fetches all TV Show added between start date and end date
+     * @param endDate
+     * @return Tv Shows as demanded by query parameters
+     */
     @GetMapping("/tv-shows")
     public ResponseEntity getTvShows(@RequestParam(required = false) Integer count,
                                      @RequestParam(required = false) String movieType,
@@ -35,31 +46,33 @@ public class NetflixController {
             long endTime = System.currentTimeMillis();
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("X-TIME-TO-EXECUTE",Long.toString (endTime-startTime) + "ms");
+            LOGGER.info("time taken to execute query =" +(endTime-startTime) +"ms");
             return ResponseEntity.ok().headers(responseHeaders).body(shows);
         }   catch (Exception exception){
+            LOGGER.error(exception.getMessage());
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
+    /***
+     * To add a json of type NetflixShow to the database if it does not exist and gives the time taken to execute the query
+//     * @param netflixShow
+     * @return success or message saying "record already exists"
+     * @throws Exception
+     */
     @PostMapping("/add")
-    public ResponseEntity<String> addShowToDatabase(@RequestBody NetflixShow netflixShow) throws Exception{
+    public ResponseEntity<String> addShowToDatabase(@RequestParam String source, @RequestBody NetflixShow netflixShow) throws Exception{
         long startTime = System.currentTimeMillis();
         try {
-            netflixService.addNetflixShowIfNotExist(netflixShow);
+           boolean isRecordAdded = netflixService.addNetflixShowIfNotExist(netflixShow);
             long endTime = System.currentTimeMillis();
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("X-TIME-TO-EXECUTE",Long.toString (endTime-startTime) + "ms");
-            return ResponseEntity.ok().headers(responseHeaders).body("Record added successfully");
+            LOGGER.info("time taken to execute query =" +(endTime-startTime) +"ms");
+            return ResponseEntity.ok().headers(responseHeaders).body( isRecordAdded?"Record added successfully":"This record already exists");
         } catch (Exception exception){
+            LOGGER.error(exception.getMessage());
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @GetMapping("/write-from-csv")
-    public void readCsvAndAddToDatabase() throws IOException, ParseException {
-     CsvReader csvReader = new CsvReader();
-     List<NetflixShow> netflixShows =  csvReader.readCSVAndGetRecords();
-     netflixService.addRecordsToDataBase(netflixShows);
-    }
-
 }
