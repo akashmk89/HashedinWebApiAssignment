@@ -1,5 +1,4 @@
 package com.hashedin.controller;
-
 import com.hashedin.model.NetflixShow;
 import com.hashedin.service.NetflixService;
 import org.slf4j.Logger;
@@ -11,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/api")
@@ -61,10 +61,10 @@ public class NetflixController {
      * @throws Exception
      */
     @PostMapping("/add")
-    public ResponseEntity<String> addShowToDatabase(@RequestParam String source, @RequestBody NetflixShow netflixShow) throws Exception{
+    public ResponseEntity<String> addShowToDatabase(@RequestParam String destination, @RequestBody NetflixShow netflixShow) throws Exception{
         long startTime = System.currentTimeMillis();
         try {
-           boolean isRecordAdded = netflixService.addNetflixShowIfNotExist(netflixShow);
+           boolean isRecordAdded = netflixService.csvOrDatabaseDecider(netflixShow,destination);
             long endTime = System.currentTimeMillis();
             HttpHeaders responseHeaders = new HttpHeaders();
             responseHeaders.set("X-TIME-TO-EXECUTE",Long.toString (endTime-startTime) + "ms");

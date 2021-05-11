@@ -1,0 +1,25 @@
+db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: akash1234
+      MYSQL_DATABASE: netflix
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: akash1234
+    command: --default-authentication-plugin=mysql_native_password
+             --init-file /docker-entrypoint-initdb.d/init.sql
+#  ports:
+#    - "3306:3306"
+
+web:
+  image: akashmk/hashedina2:latest
+  # Environment variables do not appear to be getting loaded the first time Tomcat starts!
+  environment:
+    JDBC_URL: jdbc:mysql://db:3306/netflix?user=user1&password=akash1234
+  ports:
+   - "7773:8080"
+  links:
+    - db

@@ -2,17 +2,24 @@ package com.hashedin.service;
 
 import com.hashedin.model.NetflixShow;
 import com.hashedin.repository.NetflixRepository;
+import com.hashedin.utils.CsvReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.*;
 
 @Service
 public class NetflixService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(CsvReader.class);
     @Autowired
     NetflixRepository netflixRepository;
 
+    @Autowired
+    CsvReader csvReader;
     /**
      * Based on the combination of input function decides which query has to be executed
        and if combination does not match any request then throws the exception
@@ -85,13 +92,27 @@ public class NetflixService {
      * @return
      * @throws Exception
      */
-
-    public boolean addNetflixShowIfNotExist(NetflixShow netflixShow) throws Exception{
-          if(this.CanAddRecord(netflixShow.getShowId())) {
+    public boolean addNetflixShowIfNotExistToDatabase(NetflixShow netflixShow) throws Exception{
+        if(this.CanAddRecord(netflixShow.getShowId())) {
               netflixRepository.save(netflixShow);
                 return true;
           }
           return false ;
+    }
+
+    public boolean appendToCSV(NetflixShow netflixShow) throws Exception{
+        csvReader.insertNetflixMovieToCSV(netflixShow);
+        return true;
+    }
+
+    public boolean csvOrDatabaseDecider(NetflixShow netflixShow, String destination) throws Exception {
+        if (destination.equals("csv")) {
+            this.appendToCSV(netflixShow);
+            return true;
+        } else if (destination.equals("database")){
+            return this.addNetflixShowIfNotExistToDatabase(netflixShow);
+    }
+        return false;
     }
 
     /***
@@ -102,7 +123,7 @@ public class NetflixService {
     @Transactional
     public void addRecordsToDataBase(List<NetflixShow> netflixShows) throws Exception{
         for (NetflixShow netflixShow:netflixShows) {
-            this.addNetflixShowIfNotExist(netflixShow);
+            this.addNetflixShowIfNotExistToDatabase(netflixShow);
         }
     }
 

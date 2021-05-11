@@ -27,7 +27,7 @@ public class Scheduler {
      * @throws ParseException
      * @throws Exception
      */
-    @Scheduled(cron = "0 0/30 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void updateDatabaseRecords() throws IOException, ParseException, Exception {
         LOGGER.info("CSV to Database scheduled function ran at" + LocalDateTime.now());
         List<NetflixShow> netflixShows = csvReader.readCSVAndGetRecords();

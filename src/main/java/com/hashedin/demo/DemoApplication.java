@@ -6,15 +6,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.logging.LogManager;
-
+//@EnableWebSecurity
 @EnableAutoConfiguration
-@SpringBootApplication
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 /***
  * scans all the packages for classes and beans
  */
@@ -26,7 +26,7 @@ import java.util.logging.LogManager;
 		"com.hashedin.model"})
 @EntityScan("com.hashedin.model")
 @EnableJpaRepositories("com.hashedin.repository")
-@EnableSwagger2 // used swagger throughout development as it helps
+@EnableSwagger2
 @EnableScheduling
 public class DemoApplication {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DemoApplication.class);

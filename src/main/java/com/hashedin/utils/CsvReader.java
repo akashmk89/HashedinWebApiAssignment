@@ -1,11 +1,12 @@
 package com.hashedin.utils;
-
 import com.hashedin.model.NetflixShow;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
-
+//import org.c
 import java.io.*;
 import java.text.ParseException;
 import java.util.*;
@@ -16,13 +17,14 @@ import java.util.*;
 public class CsvReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvReader.class);
     public List<NetflixShow> readCSVAndGetRecords() throws IOException, ParseException {
-        File file = ResourceUtils.getFile("classpath:netflix_titles.csv");
+        //File file = ResourceUtils.getFile("classpath:netflix_titles2.csv");
+        //File file = new FileReader("/netflix_titles2.csv");
         DateFormat dateFormat = new DateFormat();
         String delimiter = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
         List<NetflixShow> netflixShows = new ArrayList<NetflixShow>();
         int count = 0;
         String dataRow = "";
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("/netflix_titles.csv"));
         /**
          * to skip the header column of the csv
          */
@@ -41,5 +43,37 @@ public class CsvReader {
 
         return netflixShows;
         }
+
+    public NetflixShow insertNetflixMovieToCSV(NetflixShow netflixShow) throws Exception {
+       LOGGER.info("inside insert to csv");
+        File file = ResourceUtils.getFile("classpath:netflix_titles2.csv");
+        FileWriter csvWriter = new FileWriter(file,true);
+        csvWriter.append(netflixShow.getShowId()==null ? "" : netflixShow.getShowId());
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getType()==null ? "" : netflixShow.getType());
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getTitle()==null ? "" : netflixShow.getTitle());
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getDirector()==null ? "" : "\""+netflixShow.getDirector()+"\"");
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getCast()==null ? "" : "\""+netflixShow.getCast()+"\"");
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getCountry()==null ? "" : "\""+netflixShow.getCountry()+"\"");
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getDateAdded()==null ? "" : netflixShow.getDateAdded().toString());
+        csvWriter.append(",");
+        csvWriter.append(String.valueOf(netflixShow.getReleaseYear()));
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getRating()==null ? "" : netflixShow.getRating());
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getDuration()==null ? "" : netflixShow.getDuration());
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getListedIn()==null ? "" : "\""+netflixShow.getListedIn()+"\"");
+        csvWriter.append(",");
+        csvWriter.append(netflixShow.getDescription()==null ? " " : "\""+netflixShow.getDescription()+"\"");
+        csvWriter.append("\n");
+        csvWriter.close();
+        return netflixShow;
+    }
     }
 
