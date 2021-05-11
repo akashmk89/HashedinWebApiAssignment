@@ -17,14 +17,13 @@ import java.util.*;
 public class CsvReader {
     private static final Logger LOGGER = LoggerFactory.getLogger(CsvReader.class);
     public List<NetflixShow> readCSVAndGetRecords() throws IOException, ParseException {
-        //File file = ResourceUtils.getFile("classpath:netflix_titles2.csv");
-        //File file = new FileReader("/netflix_titles2.csv");
+        File file = ResourceUtils.getFile("classpath:netflix_titles2.csv");
         DateFormat dateFormat = new DateFormat();
         String delimiter = ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
         List<NetflixShow> netflixShows = new ArrayList<NetflixShow>();
         int count = 0;
         String dataRow = "";
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("/netflix_titles.csv"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         /**
          * to skip the header column of the csv
          */
@@ -46,7 +45,7 @@ public class CsvReader {
 
     public NetflixShow insertNetflixMovieToCSV(NetflixShow netflixShow) throws Exception {
        LOGGER.info("inside insert to csv");
-        File file = ResourceUtils.getFile("classpath:netflix_titles2.csv");
+        File file = ResourceUtils.getFile("classpath:netflix_titles.csv");
         FileWriter csvWriter = new FileWriter(file,true);
         csvWriter.append(netflixShow.getShowId()==null ? "" : netflixShow.getShowId());
         csvWriter.append(",");
