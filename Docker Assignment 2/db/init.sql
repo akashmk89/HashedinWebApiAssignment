@@ -1,3 +1,4 @@
+CREATE DATABASE  IF NOT EXISTS `netflix`;
 use netflix;
 DROP TABLE IF EXISTS `netflix_shows`;
 CREATE TABLE `netflix_shows` (
